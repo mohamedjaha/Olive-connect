@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: oliveconnect-backend
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/oliveconnect
+      auto-index-creation: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+# Google OAuth2 Configuration (to be configured in Google Cloud Console)
+# spring:
+#   security:
+#     oauth2:
+#       client:
+#         registration:
+#           google:
+#             client-id: ${GOOGLE_CLIENT_ID}
+#             client-secret: ${GOOGLE_CLIENT_SECRET}
+#             scope: openid,profile,email
+
+# Actuator & Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  packages-to-scan: com.oliveconnect.controller
+
+logging:
+  level:
+    com.oliveconnect: DEBUG
+    org.springframework.security: DEBUG

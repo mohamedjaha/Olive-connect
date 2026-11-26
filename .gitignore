@@ -1,0 +1,38 @@
+# Maven
+backend/target/
+backend/apache-maven-*/
+backend/apache-maven-*.zip
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Spring Boot
+spring-boot-devtools.properties
+
+# Environment
+*.env
+*.env.local
+
+# Node (for frontend later)
+node_modules/
+dist/
+build/
+.env.local
+.env.*.local
