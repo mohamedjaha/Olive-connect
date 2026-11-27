@@ -1,5 +1,7 @@
 package com.oliveconnect.config;
 
+import com.mongodb.ConnectionString;
+import org.springframework.beans.factory.annotation.Value;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +23,17 @@ public class MongoConfig {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate(MongoClient mongoClient) {
-        return new MongoTemplate(mongoClient, "oliveconnect");
-    }
+    public MongoTemplate mongoTemplate(
+            MongoClient mongoClient,
+            @Value("${spring.data.mongodb.uri}") String mongoUri) {
+
+        String database = new ConnectionString(mongoUri).getDatabase();
+
+        if (database == null || database.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Nom de la base MongoDB obligatoire");
+        }
+
+        return new MongoTemplate(mongoClient, database);
+}
 }

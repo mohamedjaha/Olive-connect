@@ -16,6 +16,13 @@
         });
         print(c.name + ' : OK');
     });
+    db.users.createIndex(
+    { email: 1 },
+    {
+        unique: true,
+        name: "idx_users_email_unique"
+    }
+    );
 
     print('INITIALISATION TERMINEE');
 })();
