@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { createSessionAdapter, type SessionAdapter, type Session, type User } from './session';
+import { definirJeton, surExpirationSession } from '@/api/client';
 
 interface SessionContextValue {
   session: Session | null;
@@ -52,6 +53,20 @@ export function SessionProvider({ children }: SessionProviderProps) {
       unsubscribe();
     };
   }, [adapter]);
+
+  // Le jeton de session alimente l'intercepteur Axios (Authorization: Bearer).
+  useEffect(() => {
+    definirJeton(session?.accessToken ?? null);
+  }, [session?.accessToken]);
+
+  // Un 401 côté API déconnecte la session au lieu de laisser un état incohérent.
+  useEffect(
+    () =>
+      surExpirationSession(() => {
+        void adapter.logout();
+      }),
+    [adapter]
+  );
 
   const login = async (credentials?: { email: string; password: string }) => {
     await adapter.login(credentials);
