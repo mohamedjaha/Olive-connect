@@ -13,6 +13,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.SpecVersion;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -39,12 +40,20 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI oliveConnectOpenAPI() {
+        SecurityScheme bearerAuth = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .description("Jeton Google OAuth2/OIDC a transmettre dans l'en-tete Authorization: Bearer <jeton>");
+
         return new OpenAPI(SpecVersion.V30)
                 .info(new Info()
                         .title("OliveConnect API")
                         .version("0.1.0")
                         .description("API de gestion de la collecte des olives - cooperative de Sfax"))
-                .servers(List.of(new Server().url("/").description("Serveur local")));
+                .servers(List.of(new Server().url("/").description("Serveur local")))
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", bearerAuth));
     }
 
     @Bean
