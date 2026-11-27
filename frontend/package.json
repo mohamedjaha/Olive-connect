@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^7.0.9",
     "@tanstack/react-query": "^5.108.4",
     "@tanstack/react-query-devtools": "^5.108.4",
+    "axios": "^1.21.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.80.0",
     "mapbox-gl": "^3.36.0",
