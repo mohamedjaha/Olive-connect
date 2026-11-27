@@ -2,6 +2,7 @@ package com.oliveconnect.dto;
 
 import com.oliveconnect.model.enums.StatutVerger;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +38,7 @@ public class VergerRequest {
     private String variete;
 
     @NotNull(message = "La localisation est obligatoire")
+    @Valid
     @Schema(description = "Coordonnees GPS du verger", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalisationDto localisation;
 
