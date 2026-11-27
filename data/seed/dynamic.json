@@ -1,0 +1,91 @@
+{
+  "mesures_externes": [
+    {
+      "_id": {
+        "$oid": "6b09ac09b696aa11fe816327"
+      },
+      "source": "dynamic.json",
+      "type": "TEMPERATURE",
+      "valeur": 24.5,
+      "unite": "°C",
+      "dateMesure": {
+        "$date": "2026-11-27T08:00:00Z"
+      },
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.76,
+          34.74
+        ]
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6b09ac09b696aa11fe816328"
+      },
+      "source": "dynamic.json",
+      "type": "HUMIDITE",
+      "valeur": 65,
+      "unite": "%",
+      "dateMesure": {
+        "$date": "2026-11-27T08:00:00Z"
+      },
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.76,
+          34.74
+        ]
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6b09ac09b696aa11fe816329"
+      },
+      "source": "dynamic.json",
+      "type": "PRECIPITATION",
+      "valeur": 12.5,
+      "unite": "mm",
+      "dateMesure": {
+        "$date": "2026-11-27T08:00:00Z"
+      },
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.76,
+          34.74
+        ]
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6b09ac09b696aa11fe81632a"
+      },
+      "source": "dynamic.json",
+      "type": "MATURITE",
+      "valeur": 85,
+      "unite": "%",
+      "dateMesure": {
+        "$date": "2026-11-27T08:00:00Z"
+      },
+      "vergerId": {
+        "$oid": "6b089474bae504409c305a94"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6b09ac09b696aa11fe81632b"
+      },
+      "source": "dynamic.json",
+      "type": "CAPACITE_PRESSOIR",
+      "valeur": 8500,
+      "unite": "kg",
+      "dateMesure": {
+        "$date": "2026-11-27T08:00:00Z"
+      },
+      "pressoirId": {
+        "$oid": "6b09a7dfb696aa11fe816324"
+      }
+    }
+  ]
+}
