@@ -33,7 +33,7 @@ const ALIGN = {
 
 function valeurAffichee(valeur: unknown): ReactNode {
   if (valeur === null || valeur === undefined || valeur === '') {
-    return <span style={{ color: 'var(--color-muted)' }}>—</span>;
+    return <span style={{ color: 'var(--color-muted)' }}>&mdash;</span>;
   }
   return String(valeur);
 }
