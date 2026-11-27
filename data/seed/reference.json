@@ -1,0 +1,111 @@
+{
+  "vergers": [
+    {
+      "_id": {
+        "$oid": "6b089474bae504409c305a94"
+      },
+      "nom": "Verger Test 01",
+      "variete": "Chemlali",
+      "maturite": 80,
+      "statut": "DISPONIBLE",
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.76,
+          34.74
+        ]
+      },
+      "proprietaireId": {
+        "$oid": "6b09a308b696aa11fe816319"
+      },
+      "superficieHa": 5
+    }
+  ],
+  "ressources": [
+    {
+      "_id": {
+        "$oid": "6b09a6afb696aa11fe81631e"
+      },
+      "nom": "Ouvrier Test 01",
+      "categorie": "OUVRIER",
+      "etat": "OPERATIONNELLE",
+      "indisponibilites": []
+    },
+    {
+      "_id": {
+        "$oid": "6b09a6afb696aa11fe81631f"
+      },
+      "nom": "Tracteur Test 01",
+      "categorie": "TRACTEUR",
+      "etat": "OPERATIONNELLE",
+      "indisponibilites": [
+        {
+          "debut": {
+            "$date": "2026-12-20T08:00:00Z"
+          },
+          "fin": {
+            "$date": "2026-12-20T12:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "6b09a6afb696aa11fe816320"
+      },
+      "nom": "Benne Test 01",
+      "categorie": "BENNE",
+      "etat": "OPERATIONNELLE",
+      "indisponibilites": []
+    },
+    {
+      "_id": {
+        "$oid": "6b09a6afb696aa11fe816321"
+      },
+      "nom": "Filet de recolte Test 01",
+      "categorie": "MATERIEL",
+      "etat": "EN_MAINTENANCE",
+      "indisponibilites": []
+    }
+  ],
+  "pressoirs": [
+    {
+      "_id": {
+        "$oid": "6b09a7dfb696aa11fe816324"
+      },
+      "nom": "Pressoir Test 01",
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.76,
+          34.74
+        ]
+      },
+      "capaciteTotaleKg": 10000,
+      "responsablesIds": [
+        {
+          "$oid": "6b09a7c9b696aa11fe816323"
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "6b09a7dfb696aa11fe816325"
+      },
+      "nom": "Pressoir Test 02",
+      "localisation": {
+        "type": "Point",
+        "coordinates": [
+          10.82,
+          34.79
+        ]
+      },
+      "capaciteTotaleKg": 15000,
+      "responsablesIds": [
+        {
+          "$oid": "6b09a7c9b696aa11fe816323"
+        }
+      ]
+    }
+  ]
+}
