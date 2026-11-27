@@ -44,13 +44,13 @@ Or use MongoDB Atlas and set `MONGODB_URI` environment variable.
 .\apache-maven-3.9.8-bin\apache-maven-3.9.8\bin\mvn.cmd spring-boot:run
 ```
 
-The API will start at `http://localhost:8080`
+The API will start at `http://localhost:8081`
 
 ### 4. Verify
 
-- Health check: `GET http://localhost:8080/api/public/health`
-- Swagger UI: `http://localhost:8080/swagger-ui.html`
-- Actuator: `http://localhost:8080/actuator/health`
+- Health check: `GET http://localhost:8081/api/public/health`
+- Swagger UI: `http://localhost:8081/swagger-ui.html`
+- Actuator: `http://localhost:8081/actuator/health`
 
 ## Google OAuth2 Setup
 
@@ -59,7 +59,7 @@ The API will start at `http://localhost:8080`
 3. **APIs & Services → Credentials → Create Credentials → OAuth client ID**
    - Type: **Web application**
    - Authorized redirect URIs:
-     - `http://localhost:8080/login/oauth2/code/google`
+     - `http://localhost:8081/login/oauth2/code/google`
      - (Add your frontend URL later)
 4. Copy **Client ID** and **Client Secret** to environment variables
 
