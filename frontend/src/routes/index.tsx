@@ -2,17 +2,12 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute, PublicRoute } from '@/auth/ProtectedRoute';
+import { Badge } from '@/components/ui/Badge';
 import { Loader2 } from 'lucide-react';
 
-// Lazy-loaded pages (code-split)
+// Pages livrées au fil des jalons. Seule la page de connexion existe en M0 :
+// les autres modules (M3 → M8) affichent `PageEnPreparation` en attendant.
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
-const VergersListPage = lazy(() => import('@/pages/VergersListPage').then((m) => ({ default: m.VergersListPage })));
-const VergerDetailPage = lazy(() => import('@/pages/VergerDetailPage').then((m) => ({ default: m.VergerDetailPage })));
-const RecoltesListPage = lazy(() => import('@/pages/RecoltesListPage').then((m) => ({ default: m.RecoltesListPage })));
-const AlertesListPage = lazy(() => import('@/pages/AlertesListPage').then((m) => ({ default: m.AlertesListPage })));
-const TourneesListPage = lazy(() => import('@/pages/TourneesListPage').then((m) => ({ default: m.TourneesListPage })));
-const ComingSoonPage = lazy(() => import('@/pages/ComingSoonPage').then((m) => ({ default: m.ComingSoonPage })));
-const CartePage = lazy(() => import('@/pages/CartePage').then((m) => ({ default: m.CartePage })));
 
 function PageLoader() {
   return (
@@ -22,12 +17,33 @@ function PageLoader() {
   );
 }
 
-// Wrapper that adds Suspense boundary around lazy pages
-function LazyPageWrapper({ Component }: { Component: React.ComponentType<any> }) {
+function LazyPageWrapper({ Component }: { Component: React.ComponentType }) {
   return (
     <Suspense fallback={<PageLoader />}>
       <Component />
     </Suspense>
+  );
+}
+
+/**
+ * Page d'attente d'un module non encore livré.
+ * Elle conserve la matrice de routes et de rôles définie en M0 sans dépendre
+ * de pages qui n'existent pas encore dans le dépôt.
+ */
+function PageEnPreparation({ titre }: { titre: string }) {
+  return (
+    <div className="max-w-xl mx-auto text-center py-16">
+      <Badge variant="muted" className="mb-4">Module en préparation</Badge>
+      <h1
+        className="text-2xl font-bold mb-2"
+        style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+      >
+        {titre}
+      </h1>
+      <p className="text-sm" style={{ color: 'var(--color-muted)' }}>
+        Cette section sera disponible dans un prochain jalon.
+      </p>
+    </div>
   );
 }
 
@@ -45,7 +61,7 @@ export const router = createBrowserRouter([
         path: 'vergers',
         element: (
           <ProtectedRoute allowedRoles={['AGRICULTEUR', 'RESPONSABLE_COLLECTE']}>
-            <LazyPageWrapper Component={VergersListPage} />
+            <PageEnPreparation titre="Mes vergers" />
           </ProtectedRoute>
         ),
       },
@@ -53,7 +69,7 @@ export const router = createBrowserRouter([
         path: 'vergers/new',
         element: (
           <ProtectedRoute allowedRoles={['AGRICULTEUR', 'RESPONSABLE_COLLECTE']}>
-            <LazyPageWrapper Component={VergersListPage} />
+            <PageEnPreparation titre="Nouveau verger" />
           </ProtectedRoute>
         ),
       },
@@ -61,7 +77,7 @@ export const router = createBrowserRouter([
         path: 'vergers/:id',
         element: (
           <ProtectedRoute allowedRoles={['AGRICULTEUR', 'RESPONSABLE_COLLECTE']}>
-            <LazyPageWrapper Component={VergerDetailPage} />
+            <PageEnPreparation titre="Détail du verger" />
           </ProtectedRoute>
         ),
       },
@@ -69,7 +85,7 @@ export const router = createBrowserRouter([
         path: 'recoltes',
         element: (
           <ProtectedRoute allowedRoles={['AGRICULTEUR', 'RESPONSABLE_COLLECTE']}>
-            <LazyPageWrapper Component={RecoltesListPage} />
+            <PageEnPreparation titre="Récoltes" />
           </ProtectedRoute>
         ),
       },
@@ -77,7 +93,7 @@ export const router = createBrowserRouter([
         path: 'alertes',
         element: (
           <ProtectedRoute allowedRoles={['AGRICULTEUR', 'RESPONSABLE_COLLECTE']}>
-            <LazyPageWrapper Component={AlertesListPage} />
+            <PageEnPreparation titre="Alertes" />
           </ProtectedRoute>
         ),
       },
@@ -85,7 +101,7 @@ export const router = createBrowserRouter([
         path: 'tournees',
         element: (
           <ProtectedRoute allowedRoles={['RESPONSABLE_COLLECTE', 'CHEF_EQUIPE']}>
-            <LazyPageWrapper Component={TourneesListPage} />
+            <PageEnPreparation titre="Tournées" />
           </ProtectedRoute>
         ),
       },
@@ -93,7 +109,7 @@ export const router = createBrowserRouter([
         path: 'carte',
         element: (
           <ProtectedRoute>
-            <LazyPageWrapper Component={CartePage} />
+            <PageEnPreparation titre="Carte interactive" />
           </ProtectedRoute>
         ),
       },
@@ -101,7 +117,7 @@ export const router = createBrowserRouter([
         path: 'ressources',
         element: (
           <ProtectedRoute allowedRoles={['RESPONSABLE_LOGISTIQUE']}>
-            <div className="text-center py-12">Ressources - À venir</div>
+            <PageEnPreparation titre="Ressources" />
           </ProtectedRoute>
         ),
       },
@@ -109,7 +125,7 @@ export const router = createBrowserRouter([
         path: 'pressoirs',
         element: (
           <ProtectedRoute allowedRoles={['RESPONSABLE_PRESSOIR']}>
-            <div className="text-center py-12">Pressoirs - À venir</div>
+            <PageEnPreparation titre="Pressoirs" />
           </ProtectedRoute>
         ),
       },
@@ -117,7 +133,7 @@ export const router = createBrowserRouter([
         path: 'admin',
         element: (
           <ProtectedRoute allowedRoles={['ADMINISTRATEUR']}>
-            <div className="text-center py-12">Administration - À venir</div>
+            <PageEnPreparation titre="Administration" />
           </ProtectedRoute>
         ),
       },
@@ -125,7 +141,7 @@ export const router = createBrowserRouter([
         path: 'profil',
         element: (
           <ProtectedRoute>
-            <LazyPageWrapper Component={ComingSoonPage} />
+            <PageEnPreparation titre="Mon profil" />
           </ProtectedRoute>
         ),
       },
@@ -133,7 +149,7 @@ export const router = createBrowserRouter([
         path: 'aide',
         element: (
           <ProtectedRoute>
-            <LazyPageWrapper Component={ComingSoonPage} />
+            <PageEnPreparation titre="Aide" />
           </ProtectedRoute>
         ),
       },

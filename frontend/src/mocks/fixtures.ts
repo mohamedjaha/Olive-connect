@@ -1,0 +1,308 @@
+import type { Alerte } from '@/types/alerte';
+import type { Recolte } from '@/types/recolte';
+import type { ChefEquipe, Pressoir, Ressource, Affectation, Tournee } from '@/types/tournee';
+import type { Verger } from '@/types/verger';
+
+/**
+ * Jeu de démonstration unique.
+ *
+ * Tous les mocks lisent ces tableaux. Un nom de verger n'est plus inventé dans
+ * le handler des tournées : il vient d'ici, comme dans le référentiel réel.
+ */
+
+export const VERGERS: Verger[] = [
+  {
+    id: 'v1',
+    agriculteurId: 'agr1',
+    nom: 'Verger Nord',
+    superficie: 12.5,
+    typeOlive: 'CHETOUI',
+    localisation: { latitude: 34.7406, longitude: 10.7603 },
+    maturite: 'MATURE',
+    statut: 'PLANIFIE',
+    rendementDisponible: 4200,
+    dateCreation: '2025-10-01T08:00:00Z',
+    dateMaj: '2025-11-15T10:30:00Z',
+  },
+  {
+    id: 'v2',
+    agriculteurId: 'agr1',
+    nom: 'Verger Sud',
+    superficie: 8.2,
+    typeOlive: 'CHEMLELI',
+    localisation: { latitude: 34.71, longitude: 10.78 },
+    maturite: 'MI_MATURE',
+    statut: 'EN_ATTENTE',
+    dateCreation: '2025-10-15T09:00:00Z',
+    dateMaj: '2025-11-10T14:00:00Z',
+  },
+];
+
+export const RECOLTES: Recolte[] = [
+  {
+    id: 'r1',
+    vergerId: 'v1',
+    agriculteurId: 'agr1',
+    type: 'PLANIFIEE',
+    dateSouhaitee: '2025-11-20',
+    datePlanifiee: '2025-11-20',
+    dateDebut: '2025-11-20T08:00:00Z',
+    dateFin: '2025-11-20T16:00:00Z',
+    motif: 'Maturité optimale',
+    quantitePrevue: 5000,
+    quantiteReelle: 4850,
+    statut: 'TERMINEE',
+    tourneeId: 't1',
+    dateCreation: '2025-11-10T10:00:00Z',
+    dateMaj: '2025-11-20T17:00:00Z',
+  },
+  {
+    id: 'r2',
+    vergerId: 'v1',
+    agriculteurId: 'agr1',
+    type: 'URGENTE',
+    dateSouhaitee: '2025-11-25',
+    datePlanifiee: '2025-11-25',
+    motif: 'Risque de pluies annoncées',
+    quantitePrevue: 3000,
+    statut: 'PLANIFIEE',
+    tourneeId: 't2',
+    dateCreation: '2025-11-22T14:30:00Z',
+    dateMaj: '2025-11-22T15:00:00Z',
+  },
+  {
+    id: 'r3',
+    vergerId: 'v2',
+    agriculteurId: 'agr1',
+    type: 'PLANIFIEE',
+    dateSouhaitee: '2025-12-01',
+    motif: 'Planification normale',
+    quantitePrevue: 2500,
+    statut: 'EN_ATTENTE',
+    dateCreation: '2025-11-20T09:00:00Z',
+    dateMaj: '2025-11-20T09:00:00Z',
+  },
+];
+
+export const ALERTES: Alerte[] = [
+  {
+    id: 'a1',
+    vergerId: 'v1',
+    agriculteurId: 'agr1',
+    categorie: 'MATURITE',
+    description:
+      "Les olives du verger Nord ont atteint leur maturité optimale pour la récolte. Taux d'huile estimé à 22%.",
+    localisation: { latitude: 34.7406, longitude: 10.7603 },
+    statut: 'TRAITEE',
+    dateCreation: '2025-11-10T08:30:00Z',
+    dateMaj: '2025-11-10T10:00:00Z',
+    dateTraitement: '2025-11-10T10:00:00Z',
+    traitePar: 'resp1',
+    commentaireTraitement: 'Récolte planifiée pour le 20/11, tournée T1 créée.',
+  },
+  {
+    id: 'a2',
+    vergerId: 'v1',
+    agriculteurId: 'agr1',
+    categorie: 'PROBLEME',
+    description:
+      "Présence de mouche de l'olive détectée sur plusieurs arbres. Traitement recommandé sous 48h.",
+    localisation: { latitude: 34.741, longitude: 10.761 },
+    statut: 'EN_COURS',
+    dateCreation: '2025-11-22T16:45:00Z',
+    dateMaj: '2025-11-22T17:00:00Z',
+    traitePar: 'resp1',
+  },
+  {
+    id: 'a3',
+    vergerId: 'v2',
+    agriculteurId: 'agr1',
+    categorie: 'MATURITE',
+    description: 'Maturité mi-avancée, surveiller pour récolte dans 2-3 semaines selon météo.',
+    statut: 'NOUVELLE',
+    dateCreation: '2025-11-23T09:15:00Z',
+    dateMaj: '2025-11-23T09:15:00Z',
+  },
+];
+
+export const CHEFS_EQUIPE: ChefEquipe[] = [
+  { id: 'ce1', nom: 'Ahmed Ben Ali', telephone: '+216 20 123 456' },
+  { id: 'ce2', nom: 'Mohamed Trabelsi', telephone: '+216 21 234 567' },
+  { id: 'ce3', nom: 'Karim Gharbi', telephone: '+216 22 345 678' },
+];
+
+export const PRESSOIRS: Pressoir[] = [
+  {
+    id: 'p1',
+    nom: 'Pressoir Central Sfax',
+    capaciteDisponible: 15000,
+    localisation: { latitude: 34.7406, longitude: 10.7603 },
+  },
+  {
+    id: 'p2',
+    nom: 'Pressoir El Amra',
+    capaciteDisponible: 8000,
+    localisation: { latitude: 34.68, longitude: 10.72 },
+  },
+  {
+    id: 'p3',
+    nom: 'Pressoir Mahres',
+    capaciteDisponible: 12000,
+    localisation: { latitude: 34.58, longitude: 10.5 },
+  },
+];
+
+export const TOURNEES: Tournee[] = [
+  {
+    id: 't1',
+    dateDebut: '2025-11-20T08:00:00Z',
+    dateFin: '2025-11-20T16:00:00Z',
+    chefEquipeId: 'ce1',
+    chefEquipeNom: 'Ahmed Ben Ali',
+    vergerIds: ['v1'],
+    vergers: [{ id: 'v1', nom: 'Verger Nord' }],
+    ressourceIds: ['r1', 'r2', 'r3'],
+    ressources: [],
+    pressoirId: 'p1',
+    pressoirNom: 'Pressoir Central Sfax',
+    statut: 'TERMINEE',
+    avancement: 100,
+    quantiteTotalePrevue: 5000,
+    quantiteTotaleReelle: 4850,
+    dateCreation: '2025-11-15T10:00:00Z',
+    dateMaj: '2025-11-20T17:00:00Z',
+  },
+  {
+    id: 't2',
+    dateDebut: '2025-11-25T07:30:00Z',
+    dateFin: '2025-11-25T15:30:00Z',
+    chefEquipeId: 'ce2',
+    chefEquipeNom: 'Mohamed Trabelsi',
+    vergerIds: ['v1', 'v2'],
+    vergers: [
+      { id: 'v1', nom: 'Verger Nord' },
+      { id: 'v2', nom: 'Verger Sud' },
+    ],
+    ressourceIds: ['r1', 'r4', 'r5'],
+    ressources: [],
+    pressoirId: 'p1',
+    pressoirNom: 'Pressoir Central Sfax',
+    statut: 'PLANIFIEE',
+    avancement: 0,
+    quantiteTotalePrevue: 8000,
+    dateCreation: '2025-11-22T14:00:00Z',
+    dateMaj: '2025-11-22T14:00:00Z',
+  },
+  {
+    id: 't3',
+    dateDebut: '2025-11-28T08:00:00Z',
+    dateFin: '2025-11-28T16:00:00Z',
+    chefEquipeId: 'ce3',
+    chefEquipeNom: 'Karim Gharbi',
+    vergerIds: ['v2'],
+    vergers: [{ id: 'v2', nom: 'Verger Sud' }],
+    ressourceIds: ['r2', 'r6'],
+    ressources: [],
+    pressoirId: 'p2',
+    pressoirNom: 'Pressoir El Amra',
+    statut: 'PLANIFIEE',
+    avancement: 0,
+    quantiteTotalePrevue: 3500,
+    dateCreation: '2025-11-23T09:00:00Z',
+    dateMaj: '2025-11-23T09:00:00Z',
+  },
+];
+
+export const RESSOURCES: Ressource[] = [
+  {
+    id: 'r1',
+    type: 'TRACTEUR',
+    nom: 'Tracteur John Deere 5075E',
+    reference: 'JD-5075E-01',
+    capacite: 1,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r2',
+    type: 'TRACTEUR',
+    nom: 'Tracteur New Holland T6.180',
+    reference: 'NH-T6180-01',
+    capacite: 1,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r3',
+    type: 'BENNE',
+    nom: 'Benne 5T - Remorque agricole',
+    reference: 'BEN-5T-01',
+    capacite: 5000,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r4',
+    type: 'BENNE',
+    nom: 'Benne 3T - Remorque agricole',
+    reference: 'BEN-3T-01',
+    capacite: 3000,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r5',
+    type: 'OUVRIER',
+    nom: 'Équipe de cueillette - Groupe A',
+    reference: 'EQ-A',
+    capacite: 8,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r6',
+    type: 'OUVRIER',
+    nom: 'Équipe de cueillette - Groupe B',
+    reference: 'EQ-B',
+    capacite: 6,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r7',
+    type: 'MATERIEL',
+    nom: 'Filets de récolte (lot de 20)',
+    reference: 'FIL-20',
+    capacite: 20,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+  {
+    id: 'r8',
+    type: 'MATERIEL',
+    nom: 'Vibrateurs oléicoles (x4)',
+    reference: 'VIB-4',
+    capacite: 4,
+    statut: 'DISPONIBLE',
+    dateCreation: '2025-10-01T00:00:00Z',
+    dateMaj: '2025-11-01T00:00:00Z',
+  },
+];
+
+export const AFFECTATIONS: Affectation[] = [
+  { id: 'af1', tourneeId: 't1', ressourceId: 'r1', dateDebut: '2025-11-20T08:00:00Z', dateFin: '2025-11-20T16:00:00Z', statut: 'TERMINEE' },
+  { id: 'af2', tourneeId: 't1', ressourceId: 'r2', dateDebut: '2025-11-20T08:00:00Z', dateFin: '2025-11-20T16:00:00Z', statut: 'TERMINEE' },
+  { id: 'af3', tourneeId: 't1', ressourceId: 'r3', dateDebut: '2025-11-20T08:00:00Z', dateFin: '2025-11-20T16:00:00Z', statut: 'TERMINEE' },
+  { id: 'af4', tourneeId: 't2', ressourceId: 'r1', dateDebut: '2025-11-25T07:30:00Z', dateFin: '2025-11-25T15:30:00Z', statut: 'PLANIFIEE' },
+  { id: 'af5', tourneeId: 't2', ressourceId: 'r4', dateDebut: '2025-11-25T07:30:00Z', dateFin: '2025-11-25T15:30:00Z', statut: 'PLANIFIEE' },
+  { id: 'af6', tourneeId: 't2', ressourceId: 'r5', dateDebut: '2025-11-25T07:30:00Z', dateFin: '2025-11-25T15:30:00Z', statut: 'PLANIFIEE' },
+  { id: 'af7', tourneeId: 't3', ressourceId: 'r2', dateDebut: '2025-11-28T08:00:00Z', dateFin: '2025-11-28T16:00:00Z', statut: 'PLANIFIEE' },
+  { id: 'af8', tourneeId: 't3', ressourceId: 'r6', dateDebut: '2025-11-28T08:00:00Z', dateFin: '2025-11-28T16:00:00Z', statut: 'PLANIFIEE' },
+];

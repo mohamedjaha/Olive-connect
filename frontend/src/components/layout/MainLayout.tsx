@@ -2,7 +2,6 @@ import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Home, MapPin, TreePine, AlertTriangle, Truck, Factory, Settings, User, ChevronDown, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { useSession } from '@/auth/SessionContext';
-import { NotificationDropdown } from './NotificationDropdown';
 
 const navigation = [
   { name: 'Accueil', href: '/', icon: Home, public: true },
@@ -72,8 +71,6 @@ export function MainLayout() {
 
             {/* Right side: notifications, user menu, mobile menu button */}
             <div className="flex items-center gap-3">
-              <NotificationDropdown />
-
               {/* User menu */}
               <div className="relative">
                 <button
