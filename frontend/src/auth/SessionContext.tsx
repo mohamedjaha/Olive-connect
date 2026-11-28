@@ -1,14 +1,32 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { createSessionAdapter, type SessionAdapter, type Session, type User } from './session';
+import {
+  createSessionAdapter,
+  type IdentifiantsConnexion,
+  type ModeAuth,
+  type Session,
+  type SessionAdapter,
+  type User,
+} from './session';
+import { normaliserRole, type Role } from './roles';
 import { definirJeton, surExpirationSession } from '@/api/client';
 
 interface SessionContextValue {
   session: Session | null;
   user: User | null;
+  /** Rôle normalisé de l'utilisateur (`VISITEUR` par défaut). */
+  role: Role;
+  /** `false` tant que le profil n'existe pas dans la collection `users`. */
+  profilComplet: boolean;
+  /** Mode d'authentification actif, pour choisir le formulaire affiché. */
+  mode: ModeAuth;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (credentials?: { email: string; password: string }) => Promise<void>;
+  login: (identifiants?: IdentifiantsConnexion) => Promise<void>;
+  /** Mode Google : consomme le jeton d'identité renvoyé par le bouton. */
+  connecterAvecJeton: (jeton: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Recharge le profil et le rôle depuis l'API. */
+  rafraichirProfil: () => Promise<void>;
   hasRole: (role: string) => boolean;
   canAccessVerger: (vergerId: string) => boolean;
 }
@@ -26,12 +44,14 @@ function getAdapter(): SessionAdapter {
 
 interface SessionProviderProps {
   children: ReactNode;
+  /** Adapter imposé (tests) : évite de dépendre de la configuration Vite. */
+  adapter?: SessionAdapter;
 }
 
-export function SessionProvider({ children }: SessionProviderProps) {
+export function SessionProvider({ children, adapter: adapterImpose }: SessionProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const adapter = getAdapter();
+  const adapter = adapterImpose ?? getAdapter();
 
   useEffect(() => {
     let mounted = true;
@@ -42,9 +62,9 @@ export function SessionProvider({ children }: SessionProviderProps) {
       setIsLoading(false);
     });
 
-    const unsubscribe = adapter.onChange((newSession) => {
+    const unsubscribe = adapter.onChange((nouvelleSession) => {
       if (mounted) {
-        setSession(newSession);
+        setSession(nouvelleSession);
       }
     });
 
@@ -65,15 +85,26 @@ export function SessionProvider({ children }: SessionProviderProps) {
       surExpirationSession(() => {
         void adapter.logout();
       }),
-    [adapter]
+    [adapter],
   );
 
-  const login = async (credentials?: { email: string; password: string }) => {
-    await adapter.login(credentials);
+  const login = async (identifiants?: IdentifiantsConnexion) => {
+    await adapter.login(identifiants);
+  };
+
+  const connecterAvecJeton = async (jeton: string) => {
+    if (!adapter.connecterAvecJeton) {
+      throw new Error("La connexion Google n'est pas disponible dans ce mode");
+    }
+    await adapter.connecterAvecJeton(jeton);
   };
 
   const logout = async () => {
     await adapter.logout();
+  };
+
+  const rafraichirProfil = async () => {
+    await adapter.refresh();
   };
 
   const hasRole = (role: string): boolean => {
@@ -84,13 +115,20 @@ export function SessionProvider({ children }: SessionProviderProps) {
     return adapter.canAccessVerger(vergerId);
   };
 
+  const role = normaliserRole(session?.user?.roles[0]);
+
   const value: SessionContextValue = {
     session,
     user: session?.user ?? null,
+    role,
+    profilComplet: session?.profilComplet ?? false,
+    mode: adapter.mode,
     isLoading,
     isAuthenticated: !!session?.user,
     login,
+    connecterAvecJeton,
     logout,
+    rafraichirProfil,
     hasRole,
     canAccessVerger,
   };
@@ -114,7 +152,8 @@ export function useRoleAccess(allowedRoles: string[]): boolean {
   const { user, isLoading } = useSession();
   if (isLoading) return false;
   if (!user) return false;
-  return allowedRoles.some((role) => user.roles.includes(role));
+  const roles = user.roles.map((role) => normaliserRole(role));
+  return allowedRoles.some((role) => roles.includes(normaliserRole(role)));
 }
 
 /**

@@ -123,5 +123,8 @@ export const clientHttp = {
 
   put: <T>(chemin: string, corps: unknown) => envoyer<T>({ method: 'PUT', url: chemin, data: corps }),
 
+  patch: <T>(chemin: string, corps: unknown) =>
+    envoyer<T>({ method: 'PATCH', url: chemin, data: corps }),
+
   supprimer: <T = void>(chemin: string) => envoyer<T>({ method: 'DELETE', url: chemin }),
 };

@@ -2,6 +2,7 @@ import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Home, MapPin, TreePine, AlertTriangle, Truck, Factory, Settings, User, ChevronDown, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { useSession } from '@/auth/SessionContext';
+import { libelleRole, normaliserRole } from '@/auth/roles';
 
 const navigation = [
   { name: 'Accueil', href: '/', icon: Home, public: true },
@@ -12,20 +13,21 @@ const navigation = [
   { name: 'Carte', href: '/carte', icon: MapPin, public: true },
   { name: 'Ressources', href: '/ressources', icon: Truck, roles: ['RESPONSABLE_LOGISTIQUE'] },
   { name: 'Pressoirs', href: '/pressoirs', icon: Factory, roles: ['RESPONSABLE_PRESSOIR'] },
-  { name: 'Administration', href: '/admin', icon: Settings, roles: ['ADMINISTRATEUR'] },
+  { name: 'Administration', href: '/admin', icon: Settings, roles: ['ADMIN'] },
 ];
 
 export function MainLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useSession();
+  const { user, logout, profilComplet } = useSession();
 
-  const userRole = user?.roles[0] ?? '';
+  const userRole = normaliserRole(user?.roles[0]);
   const userName = user?.nom ?? 'Utilisateur';
 
-  const filteredNav = navigation.filter(item =>
-    item.public || (item.roles && item.roles.includes(userRole))
+  // Aucune section privée avant l'attribution d'un rôle par un administrateur.
+  const filteredNav = navigation.filter(
+    (item) => item.public || (profilComplet && item.roles && item.roles.includes(userRole)),
   );
 
   const handleLogout = async () => {
@@ -92,7 +94,7 @@ export function MainLayout() {
                     <div className="absolute right-0 mt-2 w-48 entry z-20">
                       <div className="px-4 py-2 border-b border-solid">
                         <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>{userName}</p>
-                        <p className="text-xs" style={{ color: 'var(--color-muted)' }}>{userRole.toLowerCase().replace('_', ' ')}</p>
+                        <p className="text-xs" style={{ color: 'var(--color-muted)' }}>{libelleRole(userRole)}</p>
                       </div>
                       <Link
                         to="/profil"
