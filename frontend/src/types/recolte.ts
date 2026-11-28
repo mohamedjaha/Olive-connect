@@ -2,6 +2,7 @@ import type { PaginatedResponse, ApiError } from './common';
 import type { StatutTournee } from './tournee';
 
 export type TypeRecolte = 'PLANIFIEE' | 'URGENTE';
+
 export type StatutRecolte = 'EN_ATTENTE' | 'PLANIFIEE' | 'EN_COURS' | 'TERMINEE' | 'ANNULEE' | 'RECUE';
 
 export interface Recolte {

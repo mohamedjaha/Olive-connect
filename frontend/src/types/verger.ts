@@ -1,7 +1,9 @@
 import type { PaginatedResponse, ApiError, Coordonnees } from './common';
 
 export type StatutVerger = 'EN_ATTENTE' | 'PLANIFIE' | 'EN_COURS' | 'TERMINE' | 'ANNULE';
+
 export type TypeOlive = 'CHETOUI' | 'CHEMLELI' | 'PANCHU' | 'ARBEQUINE' | 'AUTRE';
+
 export type Maturite = 'VERTE' | 'MI_MATURE' | 'MATURE' | 'SURMATURE';
 
 /** Forme minimale d'un verger, telle que le référentiel la renvoie. */
@@ -10,6 +12,10 @@ export interface VergerReferentiel {
   nom: string;
 }
 
+/**
+ * Verger tel que manipulé par le frontend.
+ * Les champs sont alignés sur le vocabulaire métier (GLOSSARY.md).
+ */
 export interface Verger {
   id: string;
   agriculteurId: string;
