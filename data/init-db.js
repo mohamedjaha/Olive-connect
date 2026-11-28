@@ -24,5 +24,11 @@
     }
     );
 
+    // M4 - Index geospatial des alertes
+    db.alertes.createIndex(
+        { localisation: "2dsphere" },
+        { name: "idx_alertes_localisation" }
+    );
+
     print('INITIALISATION TERMINEE');
 })();
