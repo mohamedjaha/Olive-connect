@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Acces a la collection demandes.
+ * Acces a la collection demandes (M3 - Sof #2).
  * <p>
- * Interface minimale requise par les services F1 (M3 Jahha #3-4) : les
- * recherches par agriculteur, par verger et par statut alimentent les listes
- * filtrees et la coherence des references. Les requetes metier complementaires
- * (pagination, plages de dates, statistiques) sont completees par Sof dans le
- * cadre de DemandeRecolteRepository (M3).
+ * Requetes :
+ * - findByAgriculteurId : les demandes declarees par un agriculteur ;
+ * - findByVergerId : les demandes concernant un verger ;
+ * - findByStatut : les demandes d'un statut donne (file du responsable de
+ *   collecte, demandes NOUVELLE a examiner).
  */
 @Repository
 public interface DemandeRecolteRepository extends MongoRepository<DemandeRecolte, ObjectId> {
