@@ -5,10 +5,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom'
 import { router } from '@/routes'
 import { SessionProvider } from '@/auth/SessionContext'
+import { modeAuthentification } from '@/auth/session'
 import './index.css'
 
-// MSW worker pour le mocking en développement
-if (import.meta.env.DEV) {
+// MSW : uniquement en développement et jamais en mode Google, sinon les appels
+// `/api/*` seraient interceptés et le vrai backend ne serait jamais joint.
+const mocksActifs =
+  import.meta.env.DEV &&
+  import.meta.env.VITE_ENABLE_MOCKS !== 'false' &&
+  modeAuthentification() === 'mock';
+
+if (mocksActifs) {
   import('./mocks/browser').then(({ worker }) => {
     worker.start();
   });

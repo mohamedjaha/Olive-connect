@@ -1,13 +1,24 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import { Loader2 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute, PublicRoute } from '@/auth/ProtectedRoute';
+import { useSession } from '@/auth/SessionContext';
+import { accueilPourRole } from '@/auth/roles';
 import { Badge } from '@/components/ui/Badge';
-import { Loader2 } from 'lucide-react';
 
-// Pages livrées au fil des jalons. Seule la page de connexion existe en M0 :
-// les autres modules (M3 → M8) affichent `PageEnPreparation` en attendant.
+// Pages livrées au fil des jalons. Seules l'authentification et l'inscription
+// existent en M2 : les autres modules (M3 → M8) affichent `PageEnPreparation`.
 const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const InscriptionPage = lazy(() =>
+  import('@/pages/InscriptionPage').then((m) => ({ default: m.InscriptionPage })),
+);
+const AccesEnAttentePage = lazy(() =>
+  import('@/pages/AccesEnAttentePage').then((m) => ({ default: m.AccesEnAttentePage })),
+);
+const AccesRefusePage = lazy(() =>
+  import('@/pages/AccesRefusePage').then((m) => ({ default: m.AccesRefusePage })),
+);
 
 function PageLoader() {
   return (
@@ -33,7 +44,9 @@ function LazyPageWrapper({ Component }: { Component: React.ComponentType }) {
 function PageEnPreparation({ titre }: { titre: string }) {
   return (
     <div className="max-w-xl mx-auto text-center py-16">
-      <Badge variant="muted" className="mb-4">Module en préparation</Badge>
+      <Badge variant="muted" className="mb-4">
+        Module en préparation
+      </Badge>
       <h1
         className="text-2xl font-bold mb-2"
         style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
@@ -47,6 +60,16 @@ function PageEnPreparation({ titre }: { titre: string }) {
   );
 }
 
+/** Entrée du site : accueil du rôle, inscription, ou page de connexion. */
+function AccueilRedirect() {
+  const { isLoading, isAuthenticated, profilComplet, role } = useSession();
+
+  if (isLoading) return <PageLoader />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return <Navigate to={profilComplet ? accueilPourRole(role) : '/inscription'} replace />;
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -55,7 +78,27 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/login" replace />,
+        element: <AccueilRedirect />,
+      },
+      {
+        path: 'inscription',
+        element: <LazyPageWrapper Component={InscriptionPage} />,
+      },
+      {
+        path: 'en-attente',
+        element: (
+          <ProtectedRoute>
+            <LazyPageWrapper Component={AccesEnAttentePage} />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'acces-refuse',
+        element: (
+          <ProtectedRoute>
+            <LazyPageWrapper Component={AccesRefusePage} />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'vergers',
@@ -132,7 +175,7 @@ export const router = createBrowserRouter([
       {
         path: 'admin',
         element: (
-          <ProtectedRoute allowedRoles={['ADMINISTRATEUR']}>
+          <ProtectedRoute allowedRoles={['ADMIN']}>
             <PageEnPreparation titre="Administration" />
           </ProtectedRoute>
         ),
@@ -155,7 +198,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Route de login (publique) — redirige vers page d'accueil selon le rôle
+  // Connexion : page publique, redirige un utilisateur déjà connecté.
   {
     path: '/login',
     element: (
@@ -163,10 +206,5 @@ export const router = createBrowserRouter([
         <LazyPageWrapper Component={LoginPage} />
       </PublicRoute>
     ),
-  },
-  // Callback OIDC (pour plus tard)
-  {
-    path: '/callback',
-    element: <div className="min-h-screen flex items-center justify-center">Authentification en cours…</div>,
   },
 ]);
